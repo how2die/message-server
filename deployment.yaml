@@ -6,6 +6,7 @@ metadata:
   labels:
     app: message-server
 spec:
+  type: ClusterIP
   ports:
   - port: 8080
     protocol: TCP
