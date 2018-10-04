@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 
-const message = new mongoose.Schema({
-    title: { type: String },
-    content: { type: String }
-})
+const Message = new mongoose.Schema({
+        title: { type: String },
+        content: { type: String },
+        sent: { type: Date }
+    }
+);
 
-module.exports = mongoose.model('messages', message);
+module.exports = mongoose.model('messages', Message);

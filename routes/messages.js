@@ -1,8 +1,10 @@
 const express = require('express');
 const Message = require('../models/message.js');
 const isValid = require('./mongo-id-validator.js');
+const allowCrossDomain = require('./allow-cross-domain.js');
 
 const router = express.Router();
+router.use(allowCrossDomain);
 
 router.post('/', (req, res) => {
     let message = new Message(req.body);
