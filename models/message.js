@@ -1,10 +1,12 @@
-const mongoose = require('mongoose');
-
-const Message = new mongoose.Schema({
-        title: { type: String },
-        content: { type: String },
-        sent: { type: Date }
-    }
-);
-
-module.exports = mongoose.model('messages', Message);
+module.exports = (sequelize, type) => {
+    return sequelize.define('message', {
+        id: {
+            type: type.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        title: type.STRING,
+        content: type.TEXT,
+        sent: type.DATE
+    });
+};

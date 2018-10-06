@@ -1,75 +1,66 @@
 const express = require('express');
-const Message = require('../models/message.js');
-const isValid = require('./mongo-id-validator.js');
-const allowCrossDomain = require('./allow-cross-domain.js');
+const { Message } = require('../sequelize')
+const allowCrossDomain = require('./allow-cross-domain');
 
 const router = express.Router();
 router.use(allowCrossDomain);
 
+const validId = id => { return !isNaN(id); };
+
 router.post('/', (req, res) => {
-    let message = new Message(req.body);
-    message.save((err, created) => {
-        if (err) { 
-            res.status(500).send(err); 
-        } else {
-            res.status(201).send(created);
-        }
-    });
+    Message
+        .create(req.body)
+        .then(saved => { res.status(201).send(saved) })
+        .catch(err => { res.status(500).send(err) });
 });
+
 
 router.get('/', (req, res) => {
-    Message.find({}, (err, messages) => {
-        if (err) { 
-            res.status(500).send(err); 
-        } else {
-            res.status(200).send(messages);
-        }
-    })
+    Message
+        .findAll()
+        .then(messages => { res.status(200).send(messages) })
+        .catch(err => { res.status(500).send(err) });
 });
+
 
 router.get('/:messageId', (req, res) => {
-    if (!isValid(req.params.messageId)) { 
-        res.sendStatus(404)
+    if (!validId(req.params.messageId)) {
+        res.sendStatus(404);
         return;
     }
 
-    Message.findById(req.params.messageId, (err, message) => {
-        if (err) { 
-            res.status(500).send(err); 
-        } else {
-            message ? res.status(200).send(message) : res.sendStatus(404);
-        }
-    })
+    Message
+        .findById(req.params.messageId)
+        .then(message => { message ? res.status(200).send(message) : res.sendStatus(404); })
+        .catch(err => { res.status(500).send(err) });
 });
 
+
 router.put('/:messageId', (req, res) => {
-    if (!isValid(req.params.messageId)) { 
-        res.status(422).send("Invalid id"); 
+    if (!validId(req.params.messageId)) {
+        res.status(422).send("Invalid id");
         return;
     }
 
-    Message.findByIdAndUpdate(req.params.messageId, req.body, { upsert: true }, (err, existing) => {
-        if (err) { 
-            res.status(500).send(err); 
-        } else {
-            res.sendStatus(existing ? 200 : 201);
-        }
-    });
+    message = req.body;
+    req.body.id = req.params.messageId;
+    
+    Message
+        .upsert(message)
+        .then(created => { res.sendStatus(created ? 201 : 200) })
+        .catch(err => { res.status(500).send(err); });
 });
 
 router.delete('/:messageId', (req, res) => {
-    if (!isValid(req.params.messageId)) { 
+    if (!validId(req.params.messageId)) {
         res.sendStatus(204);
         return;
     }
 
-    Message.findByIdAndRemove(req.params.messageId, err => {
-        if (err) { 
-            res.status(500).send(err); 
-        } else {
-            res.sendStatus(204);
-        }
-    });
+    Message
+        .destroy({ where: { id: req.params.messageId } })
+        .then(() => { res.sendStatus(204); })
+        .catch(err => { res.status(500).send(err); });
 });
 
 module.exports = router;
