@@ -7,6 +7,7 @@ REST service for handling messages!
 ### Prerequisites
 
 * A Kubernetes cluster with kubectl access
+* Database with matching configurations
 
 ### Deploying to Kubernetes
 
