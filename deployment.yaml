@@ -30,6 +30,12 @@ spec:
       containers:
       - name: message-server
         image: how2die/message-server
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-pass
+              key: password
         ports:
         - containerPort: 8080
         imagePullPolicy: Always
