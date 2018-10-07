@@ -31,7 +31,9 @@ spec:
       - name: message-server
         image: how2die/message-server
         env:
-        - name: POSTGRES_PASSWORD
+        - name: NODE_ENV 
+          value: production
+        - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: postgres-pass

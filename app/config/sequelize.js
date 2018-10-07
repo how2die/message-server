@@ -1,9 +1,8 @@
 const Sequelize = require('sequelize');
-const MessageModel = require('./models/message');
 
 const database = "database";
 const username = "postgres";
-const password = process.env.POSTGRES_PASSWORD; 
+const password = process.env.DB_PASSWORD;
 
 const sequelize = new Sequelize(database, username, password, {
     host: "postgres",
@@ -19,14 +18,15 @@ const sequelize = new Sequelize(database, username, password, {
 sequelize
     .authenticate()
     .then(() => { console.log('Database connection has been successfully established!'); })
-    .catch(err => { console.log('Unable to connect to the database: ', err)});
+    .catch(err => { console.log('Unable to connect to the database: ', err) });
 
-const Message = MessageModel(sequelize, Sequelize);
+const Message_model = require('../models/message.model');
+const Message = Message_model(sequelize, Sequelize);
 
 sequelize
     .sync()
     .then(() => { console.log('Models synced and tables ready!'); })
-    .catch(() => { console.log('Error syncing models')});
+    .catch(() => { console.log('Error syncing models') });
 
 module.exports = {
     Message
