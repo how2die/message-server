@@ -33,6 +33,10 @@ spec:
         env:
         - name: NODE_ENV 
           value: production
+        - name: DB_DATABASE
+          value: message-server
+        - name: DB_USERNAME
+          value: postgres
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
