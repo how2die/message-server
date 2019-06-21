@@ -36,11 +36,14 @@ spec:
         - name: DB_DATABASE
           value: message-server
         - name: DB_USERNAME
-          value: postgres
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: username
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: postgres-pass
+              name: db-secret
               key: password
         ports:
         - containerPort: 8080
