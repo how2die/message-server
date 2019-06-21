@@ -18,14 +18,14 @@ exports.findAll = (req, res) => {
 };
 
 
-exports.findByPk = (req, res) => {
+exports.findById = (req, res) => {
     if (!validId(req.params.messageId)) {
         res.sendStatus(404);
         return;
     }
 
     Message
-        .findById(req.params.messageId)
+        .findByPk(req.params.messageId)
         .then(message => { message ? res.status(200).send(message) : res.sendStatus(404); })
         .catch(err => { res.status(500).send(err) });
 };
