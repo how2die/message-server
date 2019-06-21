@@ -18,7 +18,7 @@ exports.findAll = (req, res) => {
 };
 
 
-exports.findById = (req, res) => {
+exports.findByPk = (req, res) => {
     if (!validId(req.params.messageId)) {
         res.sendStatus(404);
         return;
