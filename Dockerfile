@@ -6,6 +6,7 @@ COPY . .
 
 FROM node:alpine
 COPY --from=build /usr/src/app /usr/src/app
+RUN tsc
 WORKDIR /usr/src/app
 EXPOSE 8080
 CMD ["server.js"]
